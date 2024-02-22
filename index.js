@@ -6,12 +6,11 @@ import router from './router/APIgateWay.js'
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
-
 app.use('/',router)
+// API Gatway (Entry Point for all)
 app.listen(PORT,(err)=>{
     if(err){
         return console.log("There  is Error ",err);
     }
-
-    console.log(`Server Up and Running at PORT ${PORT}`);
+    console.log(`Server Up and Running at  PORT ${PORT}`);
 })

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const UserSchema = new mongoose.Schema({
     userName:{
         type:String,
@@ -19,13 +18,7 @@ const UserSchema = new mongoose.Schema({
     },
     userPassword:{
         type:String,
-        required:true,
-        validate: {
-            validator: function(v) {
-                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v);
-            },
-            message: props => `Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character!`
-        }
+        required:true,     
         
     },
     userDOB:{
@@ -73,6 +66,7 @@ const UserSchema = new mongoose.Schema({
     
 },{timestamps:true});
 
-const User = mongoose.model("MYData",UserSchema);
+const User = mongoose.model("User",UserSchema);
 
 export default User;
+
