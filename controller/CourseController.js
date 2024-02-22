@@ -26,7 +26,6 @@ export default class CourseController {
         }
     }
 
-
     async getAllCourse(req, res) {
         try {
             const course = await Course.find({});
@@ -51,7 +50,7 @@ export default class CourseController {
         }
     }
 
-    async getCourseByName(req, res) { 
+    async getCourseByName(req, res) {
         try {
             const courseInfo = await Course.findOne({ name: req.params.courseName });
             if (courseInfo) {
@@ -72,8 +71,26 @@ export default class CourseController {
         }
     }
 
-    async updateCourse(req, res) { 
-        
+    async updateCourse(req, res) {
+        try {
+            const updateCourse = await Course.findOneAndUpdate({ name: req.params.name },
+                { $set: req.body });
+            if (updateCourse) {
+                return res.json({
+                    "message": "Course updated successfully .....",
+                    updateCourse
+                });
+            } else {
+                return res.json({
+                    "message": "Course not founded"
+                });
+            }
+        } catch (error) {
+            return res.json({
+                "message": "Something went wrong during update the course",
+                error
+            });
+        }
     }
 
     async deleteCourse(req, res) {
