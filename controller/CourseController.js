@@ -1,4 +1,4 @@
-import Course from '../model/Course.js';
+import Course from '../model/CourseSchema.js';
 
 export default class CourseController {
     async createCourse(req, res) {
