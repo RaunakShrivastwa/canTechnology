@@ -42,7 +42,6 @@ export default class CourseController {
                 });
             }
         } catch (error) {
-            console.log(error);
             return res.json({
                 "message": "Something went wrong during find course",
                 error

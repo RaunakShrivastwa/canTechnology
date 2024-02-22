@@ -38,7 +38,25 @@ export default class ProjectController {
     }
     
     async getProjectByUser(req,res) {
-        
+        try {
+            let project = await projectSchema.findOneAndUpdate({user: req.params.user},{$set: req.body});
+            if(project) {
+                project = await projectSchema.findOne({user: req.params.user});
+                return res.json({
+                    "message": "Fetch All project successfully .....",
+                    project                    
+                });
+            }else {
+                return res.json({
+                    "message": "There is no any Project available ....."
+                });
+            }
+        } catch (error) {
+            return res.json({
+                "message": "There is somethings error found in fetching projects by the userID.....",
+                error
+            });
+        }
     }
     
     async updateProject(req,res) {}
