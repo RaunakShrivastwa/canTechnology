@@ -8,5 +8,10 @@ const router = express.Router();
 router.post('/add',user.addUser);
 router.post('/varify',user.varifyUser);
 router.post('/resend',user.resend)
+router.get('/getAll',user.getAllUser);
+router.get('/delete/:userEmail',user.deleteUser);
+router.post('/update/:userEmail',user.updateUser);
+router.get('/fetchUser/:userEmail',user.fetchSingleUser);
+
 
 export default router;
