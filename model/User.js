@@ -58,7 +58,10 @@ const UserSchema = new mongoose.Schema({
     courses:[],
     certification:[],
     skills:[],
-    projects:[],
+    projects:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project'
+    }],
     resume:[],
     referal:{
         

@@ -1,15 +1,16 @@
 import projectSchema from '../model/ProjectSchema.js';
+import UserSchema from '../model/User.js';
 
 export default class ProjectController {
-    async getAllProject(req,res) {
+    async getAllProject(req, res) {
         try {
-            const project = await projectSchema.find({});
-            if(project) {
+            const project = await projectSchema.find({}).populate('Student');
+            if (project) {
                 return res.json({
                     "message": "Fetch All project successfully .....",
                     project
                 });
-            }else {
+            } else {
                 return res.json({
                     "message": "There is no any Project available ....."
                 });
@@ -21,14 +22,24 @@ export default class ProjectController {
             });
         }
     }
-    
-    async createProject(req,res) {
+
+    async createProject(req, res) {
         try {
-            const project = await projectSchema.create({... req.body});
-            return res.json({
-                "message": "Create project Successfully .....",
-                project
-            });
+            const user = await UserSchema.findById(req.body.Student);
+            if (user) {
+                const project = await projectSchema.create({ ...req.body });
+                user.projects.push(project);
+                user.save();
+                return res.json({
+                    "message": "Create project Successfully .....",
+                    project
+                });
+            } else {
+                return res.json({
+                    "message": "User not available so project will not created .....",
+                    project
+                });
+            }
         } catch (error) {
             return res.json({
                 "message": "There is somethings error found in creating projects .....",
@@ -36,17 +47,17 @@ export default class ProjectController {
             });
         }
     }
-    
-    async getProjectByUser(req,res) {
+
+    async getProjectByUser(req, res) {
         try {
-            let project = await projectSchema.findOneAndUpdate({user: req.params.user},{$set: req.body});
-            if(project) {
-                project = await projectSchema.findOne({user: req.params.user});
+            let project = await projectSchema.findOneAndUpdate({ user: req.params.user }, { $set: req.body });
+            if (project) {
+                project = await projectSchema.findOne({ user: req.params.user });
                 return res.json({
                     "message": "Fetch All project successfully .....",
-                    project                    
+                    project
                 });
-            }else {
+            } else {
                 return res.json({
                     "message": "There is no any Project available ....."
                 });
@@ -58,8 +69,8 @@ export default class ProjectController {
             });
         }
     }
-    
-    async updateProject(req,res) {}
-    
-    async deleteProject(req,res) {}
+
+    async updateProject(req, res) { }
+
+    async deleteProject(req, res) { }
 }
