@@ -44,22 +44,59 @@ export default class userController {
 
     // fetch All USer
     getAllUser = async (req, res) => {
-
+       try{
+           return res.json(await User.find({}).sort('-createdAt'));
+       }catch(err){
+         return console.log("There is Error While Fetching All User");
+       }
     }
 
     // Delete User
     deleteUser = async (req, res) => {
-
+       try{
+           const user = await User.findOneAndDelete({userEmail:req.params.userEmail});
+           if(user){
+            const name = user.userName;
+            //   user.deleteOne();
+              return res.json(`${name} Your Account Deleted Successfully!!!!!!!!!!`)
+           }else{
+            return res.json(`User Not Exist!!!!!!!!!!`)
+           }
+       }catch(err){
+        return console.log("There is Error while Deleting User",err);
+       }
     }
 
     // Update User 
-    updateUser = (req, res) => {
-
-    }
+     updateUser = async (req, res) => {
+        try {
+            const userEmail = req.params.userEmail;
+            const updates = req.body;
+            
+            const updatedUser = await User.findOneAndUpdate(
+                { userEmail: userEmail },
+                { $set: updates },
+                { new: true } // To return the updated document
+            );   
+            if (updatedUser) {
+                return res.json(updatedUser);
+            } else {
+                return res.status(404).json({ error: "User not found" });
+            }
+        } catch (err) {
+            console.error("Error occurred while updating user:", err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+    };
+    
 
     // Fetch single User
-    fetchSingleUser = (req, res) => {
-
+    fetchSingleUser = async (req, res) => {
+        try{
+            return res.json(await User.findOne({userEmail:req.params.userEmail}))
+        }catch(err){
+            return console.log("There is Error while Fetching Single User",err);
+        }
     }
 
     varifyUser = async (req, res) => {
