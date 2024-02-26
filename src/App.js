@@ -1,25 +1,11 @@
-import Nav from './Components/Nav/Nav';
-import Header from './Components/Header/Header';
-import Banner from './Components/Banner/Banner';
-import Objective from './Components/Objective/Objective';
-import Belive from './Components/Belive/Belive';
-import Alma from './Components/Alma/Alma';
-import New from './Components/New/New';
-
-
-
-
-import Foot from './Components/Foot/Foot';
-import Footer from './Components/Fotter/Fotter';
-import Fotter1 from './Components/Fotter1/Fotter1';
+import Header from "./Components/Header/Header";
+import OurServices from "./Home Component/Components/Services Component/OurCourses";
+import Uniquefeatures from "./Home Component/Components/Unique Feautures/Uniquefeatures";
 
 function App() {
   return (
     <>
-     <Nav/>
-      <div className="container">
-     
-      <Header />
+      {/* <Header />
       <Banner />
       <Objective />
       <Belive />
@@ -27,10 +13,16 @@ function App() {
       < Foot/>
       < Footer/>
       < Fotter1/>
-          
-      </div>
+    
+    */}
+      <Router>
+        <Navbar />
+        <Header />
+        <OurServices />
+        <Uniquefeatures />
+      </Router>
     </>
-  )
+  );
 }
 
 export default App;
