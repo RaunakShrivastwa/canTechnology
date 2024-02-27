@@ -19,7 +19,7 @@ const VideoUniqueSection = () => {
   return (
     <div>
       <div className="flex flex-row">
-        <div className="flex flex-col w-80 border border-white border-opacity-50 rounded rounded-lg p-4 bg-[#2d2d2d]">
+        <div className="flex flex-col w-80 border border-slate-200 rounded rounded-lg p-4 bg-[#2d2d2d]">
           <div>
             <video
               ref={(ref) => setVideoRef(ref)}
@@ -34,9 +34,6 @@ const VideoUniqueSection = () => {
             <div className="py-3">
               <h1>Ankush Singhla</h1>
               <h1 className="text-sm">Co- Found of Coding Ninjas | Mentor</h1>
-            </div>
-            <div className="mt-4 ml-2 border border-black inline-block h-8 py-1 px-4 rounded rounded-full">
-              <Countdown initialTime={30} isVideoPlaying={isVideoPlaying} />
             </div>
           </div>
         </div>
