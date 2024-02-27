@@ -62,11 +62,13 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     }],
-    resume:[],
+    resume:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Resume'
+    }],
     referal:{
         
-    }
-    
+    }   
 },{timestamps:true});
 
 const User = mongoose.model("User",UserSchema);

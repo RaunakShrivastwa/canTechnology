@@ -45,7 +45,7 @@ export default class userController {
     // fetch All USer
     getAllUser = async (req, res) => {
        try{
-           return res.json(await User.find({}).sort('-createdAt'));
+           return res.json(await User.find({}).populate('projects').sort('-createdAt'));
        }catch(err){
          return console.log("There is Error While Fetching All User");
        }
@@ -93,7 +93,7 @@ export default class userController {
     // Fetch single User
     fetchSingleUser = async (req, res) => {
         try{
-            return res.json(await User.findOne({userEmail:req.params.userEmail}))
+            return res.json(await User.findOne({userEmail:req.params.userEmail}).populate('projects'))
         }catch(err){
             return console.log("There is Error while Fetching Single User",err);
         }
