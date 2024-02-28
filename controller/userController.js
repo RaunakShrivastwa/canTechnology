@@ -1,7 +1,8 @@
 import User from "../model/User.js";
 import PasswordEncrypt from '../config/PasswordEncrypt.js'
 import { LocalStorage } from 'node-localstorage';
-import Mail from '../Mailer/RegisterEmail.js'
+import Mail from '../Mailer/RegisterEmail.js';
+import Course from '../model/CourseSchema.js'
 export default class userController {
 
     // config  =  new PasswordEncrypt();
@@ -44,40 +45,61 @@ export default class userController {
 
     // fetch All USer
     getAllUser = async (req, res) => {
-       try{
-           return res.json(await User.find({}).sort('-createdAt'));
-       }catch(err){
-         return console.log("There is Error While Fetching All User");
-       }
+        try {
+            return res.json(await User.find({}).sort('-createdAt'));
+        } catch (err) {
+            return console.log("There is Error While Fetching All User");
+        }
     }
+
+    // get User All Details
+     getAllDetails = async (req, res) => {
+        try {
+            const users = await User.find({}).populate({
+                path: 'courses',
+                populate: {
+                    path: 'modules',
+                    populate: {
+                        path: 'chapter'
+                    }
+                }
+            });
+            return res.json(users);
+        } catch (err) {
+            console.log("There is Error ", err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+    
+    
 
     // Delete User
     deleteUser = async (req, res) => {
-       try{
-           const user = await User.findOneAndDelete({userEmail:req.params.userEmail});
-           if(user){
-            const name = user.userName;
-            //   user.deleteOne();
-              return res.json(`${name} Your Account Deleted Successfully!!!!!!!!!!`)
-           }else{
-            return res.json(`User Not Exist!!!!!!!!!!`)
-           }
-       }catch(err){
-        return console.log("There is Error while Deleting User",err);
-       }
+        try {
+            const user = await User.findOne({userEmail: req.params.userEmail });
+            if (user) {
+                
+                const name = user.userName;
+                //   user.deleteOne();
+                return res.json(`${name} Your Account Deleted Successfully!!!!!!!!!!`)
+            } else {
+                return res.json(`User Not Exist!!!!!!!!!!`)
+            }
+        } catch (err) {
+            return console.log("There is Error while Deleting User", err);
+        }
     }
 
     // Update User 
-     updateUser = async (req, res) => {
+    updateUser = async (req, res) => {
         try {
             const userEmail = req.params.userEmail;
             const updates = req.body;
-            
             const updatedUser = await User.findOneAndUpdate(
                 { userEmail: userEmail },
                 { $set: updates },
                 { new: true } // To return the updated document
-            );   
+            );
             if (updatedUser) {
                 return res.json(updatedUser);
             } else {
@@ -88,14 +110,14 @@ export default class userController {
             return res.status(500).json({ error: "Internal Server Error" });
         }
     };
-    
+
 
     // Fetch single User
     fetchSingleUser = async (req, res) => {
-        try{
-            return res.json(await User.findOne({userEmail:req.params.userEmail}))
-        }catch(err){
-            return console.log("There is Error while Fetching Single User",err);
+        try {
+            return res.json(await User.findOne({ userEmail: req.params.userEmail }))
+        } catch (err) {
+            return console.log("There is Error while Fetching Single User", err);
         }
     }
 
@@ -109,10 +131,10 @@ export default class userController {
         if (Math.abs(currentTime - data.time) < 2) {
             if (OTP == data.OTP) {
                 delete data.OTP;
-                delete data.time; 
-                const user =  await User.create(data);
+                delete data.time;
+                const user = await User.create(data);
                 this.localStorage.removeItem('TempData');
-                return res.json({Message:`Welcome ${user.userName} to EduHub`,user})
+                return res.json({ Message: `Welcome ${user.userName} to EduHub`, user })
             } else {
                 return res.json("Not Valide")
             }
@@ -143,10 +165,32 @@ export default class userController {
 
     }
 
-    
+
     isValidPassword = (password) => {
         const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
         return regex.test(password);
     };
+
+    AssignCourse = async (req, res) => {
+        try {
+            const { userEmail, courseName } = req.body;
+            const user = await User.findOne({ userEmail });
+
+            if (user) {
+                const course = await Course.findOne({ name: courseName });
+                if (course) {
+                    user.courses.push(course);
+                    user.save();
+                    course.student.push(user);
+                    course.save();
+                    return res.json(user);
+                }else{return res.json(`Course Not Exist !!!!!!!`)}
+            }else{
+                return res.json(`User Not Exist!!!!!`);
+            }
+        } catch (err) {
+            return console.log("There is Error While You Assign Course!!!!!!!!", err);
+        }
+    }
 
 }

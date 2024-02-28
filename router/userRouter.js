@@ -12,6 +12,8 @@ router.get('/getAll',user.getAllUser);
 router.get('/delete/:userEmail',user.deleteUser);
 router.post('/update/:userEmail',user.updateUser);
 router.get('/fetchUser/:userEmail',user.fetchSingleUser);
+router.post('/course/assign',user.AssignCourse);
+router.get('/allDetals/Information',user.getAllDetails);
 
 
 export default router;

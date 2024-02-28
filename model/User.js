@@ -55,7 +55,11 @@ const UserSchema = new mongoose.Schema({
     enroll:{
         type:String
     },
-    courses:[],
+    courses:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course'
+
+    }],
     certification:[],
     skills:[],
     projects:[{

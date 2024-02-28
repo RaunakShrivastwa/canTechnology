@@ -10,18 +10,24 @@ const CourseSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    milestone: [],
+    milestone: {type:Number,required:true},
     description: {
         type: String,
         required: true
     },
     score: {
-        type: String,
+        type: Number,
         required: true
     },
-    student: [],
-    mentor: [],
-    project: []
+    student: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref :'User'
+    }],
+    project: [],
+    modules:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Module'
+    }]
 }, {
     timestamps: true
 })

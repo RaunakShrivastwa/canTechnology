@@ -10,7 +10,6 @@ const PORT = process.env.PORT;
 // API Gatway (Entry Point for all)
 app.use('/',router)
 
-app.use('/',router)
 // API Gatway (Entry Point for all)
 
 app.listen(PORT,(err)=>{
