@@ -4,20 +4,20 @@ import UserSchema from '../model/User.js';
 export default class ProjectController {
     async getAllProject(req, res) {
         try {
-            const project = await projectSchema.find({}).populate('Student');
-            if (project) {
-                return res.json({
-                    "message": "Fetch All project successfully .....",
-                    project
+            const projects = await projectSchema.find({}).populate('Student');
+            if (projects.length > 0) {
+                return res.status(200).json({
+                    "message": "Fetch All projects successfully .....",
+                    projects
                 });
             } else {
-                return res.json({
+                return res.status(404).json({
                     "message": "There is no any Project available ....."
                 });
             }
         } catch (error) {
-            return res.json({
-                "message": "There is somethings error found in fetching projects .....",
+            return res.status(500).json({
+                "message": "There is something error found in fetching projects .....",
                 error
             });
         }
@@ -30,19 +30,18 @@ export default class ProjectController {
                 const project = await projectSchema.create({ ...req.body });
                 user.projects.push(project);
                 user.save();
-                return res.json({
-                    "message": "Create project Successfully .....",
+                return res.status(201).json({
+                    "message": "Create project successfully .....",
                     project
                 });
             } else {
-                return res.json({
-                    "message": "User not available so project will not created .....",
-                    project
+                return res.status(404).json({
+                    "message": "User not available so the project will not be created .....",
                 });
             }
         } catch (error) {
-            return res.json({
-                "message": "There is somethings error found in creating projects .....",
+            return res.status(500).json({
+                "message": "There is something error found in creating projects .....",
                 error
             });
         }
@@ -50,27 +49,76 @@ export default class ProjectController {
 
     async getProjectByUser(req, res) {
         try {
-            let project = await projectSchema.findOneAndUpdate({ user: req.params.user }, { $set: req.body });
+            const project = await projectSchema.findById(req.params.id).populate('Student');
             if (project) {
-                project = await projectSchema.findOne({ user: req.params.user });
-                return res.json({
-                    "message": "Fetch All project successfully .....",
+                return res.status(200).json({
+                    "message": "Fetch project successfully .....",
                     project
                 });
             } else {
-                return res.json({
-                    "message": "There is no any Project available ....."
+                return res.status(404).json({
+                    "message": "Project not found ....."
                 });
             }
         } catch (error) {
-            return res.json({
-                "message": "There is somethings error found in fetching projects by the userID.....",
+            return res.status(500).json({
+                "message": "There is something error found in fetching projects .....",
                 error
             });
         }
     }
 
-    async updateProject(req, res) { }
+    async updateProject(req, res) {
+        try {
+            const updateProject = await projectSchema.findByIdAndUpdate(req.params.id, { $set: req.body });
 
-    async deleteProject(req, res) { }
+            if (updateProject) {
+                return res.status(200).json({
+                    "message": "Project updated successfully .....",
+                    updateProject
+                });
+            } else {
+                return res.status(404).json({
+                    "message": "Project not found ....."
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({
+                "message": "Internal Server Error .....",
+                error
+            });
+        }
+    }
+
+    async deleteProject(req, res) {
+        try {
+            const project = await projectSchema.findByIdAndDelete(req.params.id);
+
+            if (project) {
+                const user = await UserSchema.findById(project.Student);
+
+                if (user) {
+                    user.projects.pull(project);
+                    user.save();
+                    return res.status(200).json({
+                        "message": "Project deleted successfully .....",
+                        project
+                    });
+                } else {
+                    return res.status(404).json({
+                        "message": "User not found ....."
+                    });
+                }
+            } else {
+                return res.status(404).json({
+                    "message": "Project not found ....."
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({
+                "message": "Error deleting project by the userID .....",
+                error
+            });
+        }
+    }
 }
