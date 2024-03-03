@@ -76,12 +76,11 @@ export default class userController {
     // Delete User
     deleteUser = async (req, res) => {
         try {
-            const user = await User.findOne({userEmail: req.params.userEmail });
-            if (user) {
+            const user = await User.findOneAndDelete({userEmail: req.params.userEmail });
+            if (user){               
+               const course = await Course.updateMany({student:user.id},{$pull:{student:user.id}})
                 
-                const name = user.userName;
-                //   user.deleteOne();
-                return res.json(`${name} Your Account Deleted Successfully!!!!!!!!!!`)
+                return res.json(`${user.userName} Your Account Deleted!!!`)
             } else {
                 return res.json(`User Not Exist!!!!!!!!!!`)
             }
@@ -89,7 +88,6 @@ export default class userController {
             return console.log("There is Error while Deleting User", err);
         }
     }
-
     // Update User 
     updateUser = async (req, res) => {
         try {
